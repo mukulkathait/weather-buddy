@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import InputComponent from "../utilities/InputComponent";
 import GoogleLoginComponent from "./GoogleLoginComponent";
 import axios from "axios";
@@ -8,6 +9,7 @@ interface SignupProps {
 }
 
 const SignupComponent: React.FC<SignupProps> = ({ toggleForm }) => {
+  const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -24,7 +26,9 @@ const SignupComponent: React.FC<SignupProps> = ({ toggleForm }) => {
           username,
         },
       });
-      console.log(response.data);
+      if (response.status < 400) {
+        navigate("homepage");
+      }
     } catch (error) {
       console.log(error);
     }

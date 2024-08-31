@@ -1,9 +1,9 @@
-import Authentication from "./authentication/Authentication";
+import { Outlet } from "react-router-dom";
 
 function App() {
   return (
     <>
-      <Authentication />
+      <Outlet />
     </>
   );
 }
