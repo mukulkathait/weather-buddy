@@ -5,6 +5,7 @@ import App from "./App.tsx";
 import "./index.css";
 import Homepage from "./components/homepage/Homepage.tsx";
 import Authentication from "./authentication/Authentication.tsx";
+import ApiComponent from "./components/apiKey/ApiComponent.tsx";
 
 const router = createBrowserRouter([
   {
@@ -18,6 +19,10 @@ const router = createBrowserRouter([
       {
         path: "/homepage",
         element: <Homepage />,
+      },
+      {
+        path: "/api-keys",
+        element: <ApiComponent />,
       },
     ],
   },

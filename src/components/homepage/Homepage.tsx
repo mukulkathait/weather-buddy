@@ -6,19 +6,19 @@ interface User {
   telegramId: string;
   username: string;
   firstName: string;
-  isSubscribed: Boolean;
-  isBlocked: Boolean;
+  isSubscribed: boolean;
+  isBlocked: boolean;
   preferredTime: string;
 }
 
 function Homepage() {
   const [allUser, setAllUser] = useState<User[]>([]);
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
   useEffect(() => {
     const getAllUser = async () => {
       try {
         const response = await axios.get("http://localhost:3000/users/all");
-        console.log(response.data);
         setAllUser(response.data);
       } catch (error) {
         console.log("ERROR: ", error);
@@ -29,8 +29,7 @@ function Homepage() {
 
   const deleteHandler = async (id: string) => {
     try {
-      const response = await axios.delete(`http://localhost:3000/users/${id}`);
-      console.log(response);
+      await axios.delete(`http://localhost:3000/users/${id}`);
       setAllUser((prev) => prev.filter((user) => user.id !== id));
     } catch (error) {
       console.log("ERROR: ", error);
@@ -39,17 +38,11 @@ function Homepage() {
 
   const blockHandler = async (id: string) => {
     try {
-      const response = await axios.patch(
-        `http://localhost:3000/users/block/${id}`
-      );
-      console.log(response);
+      await axios.patch(`http://localhost:3000/users/block/${id}`);
       setAllUser((prev) =>
-        prev.map((user) => {
-          if (user.id === id) {
-            user.isBlocked = true;
-            return user;
-          } else return user;
-        })
+        prev.map((user) =>
+          user.id === id ? { ...user, isBlocked: true } : user
+        )
       );
     } catch (error) {
       console.log("ERROR: ", error);
@@ -58,60 +51,110 @@ function Homepage() {
 
   const unblockHandler = async (id: string) => {
     try {
-      const response = await axios.patch(
-        `http://localhost:3000/users/unblock/${id}`
-      );
-      console.log(response);
+      await axios.patch(`http://localhost:3000/users/unblock/${id}`);
       setAllUser((prev) =>
-        prev.map((user) => {
-          if (user.id === id) {
-            user.isBlocked = false;
-            return user;
-          } else return user;
-        })
+        prev.map((user) =>
+          user.id === id ? { ...user, isBlocked: false } : user
+        )
       );
     } catch (error) {
       console.log("ERROR: ", error);
     }
   };
 
+  const filteredUsers = allUser.filter(
+    (user) =>
+      user.id.includes(searchTerm) ||
+      user.telegramId.includes(searchTerm) ||
+      user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.firstName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
-    <div>
-      {allUser &&
-        allUser.map((user) => (
-          <div key={user.id}>
-            <p>ID: {user.id}</p>
-            <p>Telegram ID: {user.telegramId}</p>
-            <p>Username: {user.username}</p>
-            <p>First Name: {user.firstName}</p>
-            <p>Subscribed: {user.isSubscribed ? "Yes" : "No"}</p>
-            <p>Blocked: {user.isBlocked ? "Yes" : "No"}</p>
-            <p>
-              Preferred Time: {user.preferredTime ? user.preferredTime : "NA"}
-            </p>
-            {user.isBlocked ? (
-              <button
-                className="border p-2 rounded-md bg-slate-400"
-                onClick={() => unblockHandler(user.id)}
-              >
-                Unblock
-              </button>
-            ) : (
-              <button
-                className="border p-2 rounded-md bg-slate-400"
-                onClick={() => blockHandler(user.id)}
-              >
-                Block
-              </button>
-            )}
-            <button
-              className="border p-2 rounded-md bg-slate-400"
-              onClick={() => deleteHandler(user.id)}
-            >
-              Delete
-            </button>
-          </div>
-        ))}
+    <div className="p-5">
+      <h2 className="text-center mb-5 text-xl font-bold">User Management</h2>
+
+      {/* Search Box */}
+      <input
+        type="text"
+        placeholder="Search by ID, Telegram ID, Username, or First Name"
+        className="mb-5 w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+
+      <table className="w-full border-collapse">
+        <thead>
+          <tr>
+            <th className="border border-gray-300 p-2 bg-gray-100 text-left">
+              ID
+            </th>
+            <th className="border border-gray-300 p-2 bg-gray-100 text-left">
+              Telegram ID
+            </th>
+            <th className="border border-gray-300 p-2 bg-gray-100 text-left">
+              Username
+            </th>
+            <th className="border border-gray-300 p-2 bg-gray-100 text-left">
+              First Name
+            </th>
+            <th className="border border-gray-300 p-2 bg-gray-100 text-left">
+              Subscribed
+            </th>
+            <th className="border border-gray-300 p-2 bg-gray-100 text-left">
+              Blocked
+            </th>
+            <th className="border border-gray-300 p-2 bg-gray-100 text-left">
+              Preferred Time
+            </th>
+            <th className="border border-gray-300 p-2 bg-gray-100 text-left">
+              Actions
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {filteredUsers.map((user) => (
+            <tr key={user.id}>
+              <td className="border border-gray-300 p-2">{user.id}</td>
+              <td className="border border-gray-300 p-2">{user.telegramId}</td>
+              <td className="border border-gray-300 p-2">{user.username}</td>
+              <td className="border border-gray-300 p-2">{user.firstName}</td>
+              <td className="border border-gray-300 p-2">
+                {user.isSubscribed ? "Yes" : "No"}
+              </td>
+              <td className="border border-gray-300 p-2">
+                {user.isBlocked ? "Yes" : "No"}
+              </td>
+              <td className="border border-gray-300 p-2">
+                {user.preferredTime || "NA"}
+              </td>
+              <td className="border border-gray-300 p-2">
+                {user.isBlocked ? (
+                  <button
+                    className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                    onClick={() => unblockHandler(user.id)}
+                  >
+                    Unblock
+                  </button>
+                ) : (
+                  <button
+                    className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                    onClick={() => blockHandler(user.id)}
+                  >
+                    Block
+                  </button>
+                )}
+                <button
+                  className="ml-2 px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600"
+                  onClick={() => deleteHandler(user.id)}
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
