@@ -1,5 +1,4 @@
 import axios from "axios";
-import { userInfo } from "os";
 import { useEffect, useState } from "react";
 
 interface User {

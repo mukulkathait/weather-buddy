@@ -36,8 +36,8 @@ const GoogleLoginComponent: React.FC = () => {
   };
 
   return (
-    <GoogleOAuthProvider clientId={import.meta.env.VITE_CLIENT_ID || ""}>
-      <div className="App">
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_CLIENT_ID}>
+      <div>
         <GoogleLogin
           onSuccess={handleGoogleLoginSuccess}
           onError={handleGoogleLoginError}
