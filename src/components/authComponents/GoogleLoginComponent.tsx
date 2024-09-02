@@ -1,31 +1,33 @@
 import React from "react";
-import {
-  GoogleOAuthProvider,
-  GoogleLogin,
-  CredentialResponse,
-} from "@react-oauth/google";
+import { GoogleLogin, CredentialResponse } from "@react-oauth/google";
+import axios from "axios";
+import { useAppDispatch } from "../../store/stateHook";
+import { useNavigate } from "react-router-dom";
+import { login } from "../../store/authSlice";
 
 const GoogleLoginComponent: React.FC = () => {
-  const handleGoogleLoginSuccess = (response: CredentialResponse) => {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  const handleGoogleLoginSuccess = async (response: CredentialResponse) => {
     if (response.credential) {
       const idToken = response.credential;
-
-      // Send the ID token to the backend
-      fetch("http://localhost:3000/auth/google-login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ idToken }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          // Handle login success (store token, redirect, etc.)
-          console.log("Login success:", data);
-        })
-        .catch((error) => {
-          console.error("Login failed:", error);
+      console.log("idToken: ", idToken);
+      try {
+        const response = await axios({
+          method: "post",
+          url: "http://localhost:3000/auth/google-auth",
+          data: {
+            idToken,
+          },
         });
+        if (response.data) {
+          dispatch(login({ token: response.data.access_token }));
+          navigate("homepage");
+        }
+      } catch (error) {
+        console.log("Login Failed: ", error);
+      }
     } else {
       console.error("Google login did not return a credential.");
     }
@@ -36,14 +38,12 @@ const GoogleLoginComponent: React.FC = () => {
   };
 
   return (
-    <GoogleOAuthProvider clientId={import.meta.env.VITE_CLIENT_ID}>
-      <div>
-        <GoogleLogin
-          onSuccess={handleGoogleLoginSuccess}
-          onError={handleGoogleLoginError}
-        />
-      </div>
-    </GoogleOAuthProvider>
+    <div>
+      <GoogleLogin
+        onSuccess={handleGoogleLoginSuccess}
+        onError={handleGoogleLoginError}
+      />
+    </div>
   );
 };
 
