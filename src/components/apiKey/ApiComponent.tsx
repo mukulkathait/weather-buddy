@@ -132,8 +132,9 @@ function ApiComponent() {
             <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-75">
               <div className="bg-white p-6 rounded-lg shadow-xl max-w-md w-full">
                 <p className="mb-4 text-lg font-semibold text-red-600">
-                  Warning: Saving these keys might expose sensitive data. Are
-                  you sure you want to proceed?
+                  <b>Warning:</b> Changing these keys might{" "}
+                  <b>break the application</b>. Are you sure you want to
+                  proceed?
                 </p>
                 <div className="flex justify-end gap-4">
                   <button
