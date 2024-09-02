@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import DisplayApiKeys from "./DisplayApiKeys";
+import { useAppSelector } from "../../store/stateHook";
 
 interface ApiKeyDataTypes {
   jwt_secret: string;
@@ -9,6 +10,7 @@ interface ApiKeyDataTypes {
 }
 
 function ApiComponent() {
+  const token = useAppSelector((state) => state.auth.token);
   const [apiKeysData, setApiKeysData] = useState<ApiKeyDataTypes>({
     jwt_secret: "",
     telegram_bot_token: "",
@@ -24,7 +26,12 @@ function ApiComponent() {
     const getApiKeys = async () => {
       try {
         const response = await axios.get<ApiKeyDataTypes>(
-          "http://localhost:3000/api"
+          "http://localhost:3000/api",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         const { jwt_secret, telegram_bot_token, weather_api_key } =
           response.data;
@@ -53,8 +60,15 @@ function ApiComponent() {
   };
 
   const handleSave = async () => {
-    /* try {
-      await axios.post("http://localhost:3000/api/save", apiKeysData);
+    try {
+      await axios({
+        method: "post",
+        url: "http://localhost:3000/api/save",
+        data: apiKeysData,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setOriginalApiKeysData(apiKeysData); // Update original data to the new saved state
       setIsEdited(false);
     } catch (error) {
@@ -62,7 +76,7 @@ function ApiComponent() {
         "ERROR: Error while saving API KEYS to the database.",
         error
       );
-    } */
+    }
   };
 
   const handleDiscard = () => {

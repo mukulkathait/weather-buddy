@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useAppSelector } from "../../store/stateHook";
 
 interface User {
   id: string;
@@ -12,13 +13,18 @@ interface User {
 }
 
 function Homepage() {
+  const token = useAppSelector((state) => state.auth.token);
   const [allUser, setAllUser] = useState<User[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
 
   useEffect(() => {
     const getAllUser = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/users/all");
+        const response = await axios.get("http://localhost:3000/users/all", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setAllUser(response.data);
       } catch (error) {
         console.log("ERROR: ", error);
@@ -29,7 +35,11 @@ function Homepage() {
 
   const deleteHandler = async (id: string) => {
     try {
-      await axios.delete(`http://localhost:3000/users/${id}`);
+      await axios.delete(`http://localhost:3000/users/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setAllUser((prev) => prev.filter((user) => user.id !== id));
     } catch (error) {
       console.log("ERROR: ", error);
@@ -38,7 +48,11 @@ function Homepage() {
 
   const blockHandler = async (id: string) => {
     try {
-      await axios.patch(`http://localhost:3000/users/block/${id}`);
+      await axios.patch(`http://localhost:3000/users/block/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setAllUser((prev) =>
         prev.map((user) =>
           user.id === id ? { ...user, isBlocked: true } : user
@@ -51,7 +65,11 @@ function Homepage() {
 
   const unblockHandler = async (id: string) => {
     try {
-      await axios.patch(`http://localhost:3000/users/unblock/${id}`);
+      await axios.patch(`http://localhost:3000/users/unblock/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setAllUser((prev) =>
         prev.map((user) =>
           user.id === id ? { ...user, isBlocked: false } : user

@@ -5,12 +5,14 @@ import GoogleLoginComponent from "./GoogleLoginComponent";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { login } from "../../store/authSlice";
+import { useAppSelector } from "../../store/stateHook";
 
 interface SignupProps {
   toggleForm: () => void;
 }
 
 const SignupComponent: React.FC<SignupProps> = ({ toggleForm }) => {
+  const token = useAppSelector((state) => state.auth.token);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [username, setUsername] = useState("");
