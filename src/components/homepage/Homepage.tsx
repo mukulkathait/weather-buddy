@@ -71,8 +71,8 @@ function Homepage() {
   );
 
   return (
-    <div className="p-5">
-      <h2 className="text-center mb-5 text-xl font-bold">User Management</h2>
+    <div className="p-5 bg-slate-400 flex flex-col flex-grow">
+      <h2 className="text-center mb-5 text-xl font-bold">Admin Dashboard</h2>
 
       {/* Search Box */}
       <input
@@ -128,17 +128,17 @@ function Homepage() {
               <td className="border border-gray-300 p-2">
                 {user.preferredTime || "NA"}
               </td>
-              <td className="border border-gray-300 p-2">
+              <td className="border border-gray-300 p-2 flex justify-center">
                 {user.isBlocked ? (
                   <button
-                    className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                    className="px-4 py-2 w-24 bg-green-600 text-white rounded hover:bg-green-700"
                     onClick={() => unblockHandler(user.id)}
                   >
                     Unblock
                   </button>
                 ) : (
                   <button
-                    className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                    className="px-4 py-2 w-24 bg-red-600 text-white rounded hover:bg-red-700"
                     onClick={() => blockHandler(user.id)}
                   >
                     Block

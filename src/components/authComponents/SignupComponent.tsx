@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import InputComponent from "../utilities/InputComponent";
 import GoogleLoginComponent from "./GoogleLoginComponent";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { login } from "../../store/authSlice";
 
 interface SignupProps {
   toggleForm: () => void;
@@ -10,6 +12,7 @@ interface SignupProps {
 
 const SignupComponent: React.FC<SignupProps> = ({ toggleForm }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -27,6 +30,12 @@ const SignupComponent: React.FC<SignupProps> = ({ toggleForm }) => {
         },
       });
       if (response.status < 400) {
+        dispatch(
+          login({
+            token: response.data.access_token,
+          })
+        );
+        console.log(response.data);
         navigate("homepage");
       }
     } catch (error) {

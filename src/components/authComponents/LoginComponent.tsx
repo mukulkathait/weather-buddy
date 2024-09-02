@@ -3,12 +3,15 @@ import { useNavigate } from "react-router-dom";
 import InputComponent from "../utilities/InputComponent";
 import GoogleLoginComponent from "./GoogleLoginComponent";
 import axios from "axios";
+import { useAppDispatch } from "../../store/stateHook";
+import { login } from "../../store/authSlice";
 
 interface LoginProps {
   toggleForm: () => void;
 }
 
 const LoginComponent: React.FC<LoginProps> = ({ toggleForm }) => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -26,6 +29,12 @@ const LoginComponent: React.FC<LoginProps> = ({ toggleForm }) => {
         },
       });
       if (response.status < 400) {
+        dispatch(
+          login({
+            token: response.data.access_token,
+          })
+        );
+        console.log(response.data);
         navigate("homepage");
       }
     } catch (error) {

@@ -1,13 +1,12 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import App from "./App.tsx";
 import "./index.css";
-import Homepage from "./components/homepage/Homepage.tsx";
-import Authentication from "./authentication/Authentication.tsx";
-import ApiComponent from "./components/apiKey/ApiComponent.tsx";
+import { Provider } from "react-redux";
+import store from "./store/store.ts";
 
-const router = createBrowserRouter([
+/* const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
@@ -26,10 +25,16 @@ const router = createBrowserRouter([
       },
     ],
   },
-]);
+]); */
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <BrowserRouter>
+      <Provider store={store}>
+        <Routes>
+          <Route path="/*" element={<App />} />
+        </Routes>
+      </Provider>
+    </BrowserRouter>
   </StrictMode>
 );
