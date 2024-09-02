@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import InputComponent from "../utilities/InputComponent";
 import GoogleLoginComponent from "./GoogleLoginComponent";
 import axios from "axios";
-import { useAppDispatch, useAppSelector } from "../../store/stateHook";
+import { useAppDispatch } from "../../store/stateHook";
 import { login } from "../../store/authSlice";
 
 interface LoginProps {
@@ -11,7 +11,6 @@ interface LoginProps {
 }
 
 const LoginComponent: React.FC<LoginProps> = ({ toggleForm }) => {
-  const token = useAppSelector((state) => state.auth.token);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
