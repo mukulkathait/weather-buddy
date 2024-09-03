@@ -5,15 +5,22 @@ import { useAppDispatch } from "../../store/stateHook";
 import { useNavigate } from "react-router-dom";
 import { login } from "../../store/authSlice";
 
-const GoogleLoginComponent: React.FC = () => {
+interface GoogleLoginComponentProps {
+  setLoading: (isLoading: boolean) => void; // Add setLoading prop
+}
+
+const GoogleLoginComponent: React.FC<GoogleLoginComponentProps> = ({
+  setLoading,
+}) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const handleGoogleLoginSuccess = async (response: CredentialResponse) => {
     if (response.credential) {
       const idToken = response.credential;
-      console.log("idToken: ", idToken);
+
       try {
+        setLoading(true);
         const response = await axios({
           method: "post",
           url: "/auth/google-auth",
@@ -27,6 +34,8 @@ const GoogleLoginComponent: React.FC = () => {
         }
       } catch (error) {
         console.log("Login Failed: ", error);
+      } finally {
+        setLoading(false);
       }
     } else {
       console.error("Google login did not return a credential.");
