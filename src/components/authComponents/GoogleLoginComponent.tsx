@@ -1,6 +1,6 @@
 import React from "react";
 import { GoogleLogin, CredentialResponse } from "@react-oauth/google";
-import axios from "axios";
+import axios from "../api/axios";
 import { useAppDispatch } from "../../store/stateHook";
 import { useNavigate } from "react-router-dom";
 import { login } from "../../store/authSlice";
@@ -16,7 +16,7 @@ const GoogleLoginComponent: React.FC = () => {
       try {
         const response = await axios({
           method: "post",
-          url: "http://localhost:3000/auth/google-auth",
+          url: "/auth/google-auth",
           data: {
             idToken,
           },

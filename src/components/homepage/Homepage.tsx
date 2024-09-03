@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../api/axios";
 import { useEffect, useState } from "react";
 import { useAppSelector } from "../../store/stateHook";
 
@@ -22,7 +22,7 @@ function Homepage() {
       try {
         const response = await axios({
           method: "get",
-          url: "http://localhost:3000/users/all",
+          url: "/users/all",
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -40,7 +40,7 @@ function Homepage() {
     try {
       await axios({
         method: "delete",
-        url: `http://localhost:3000/users/${id}`,
+        url: `/users/${id}`,
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -55,7 +55,7 @@ function Homepage() {
     try {
       await axios({
         method: "patch",
-        url: `http://localhost:3000/users/block/${id}`,
+        url: `/users/block/${id}`,
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -74,7 +74,7 @@ function Homepage() {
     try {
       await axios({
         method: "patch",
-        url: `http://localhost:3000/users/unblock/${id}`,
+        url: `/users/unblock/${id}`,
         headers: {
           Authorization: `Bearer ${token}`,
         },

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import InputComponent from "../utilities/InputComponent";
 import GoogleLoginComponent from "./GoogleLoginComponent";
-import axios from "axios";
+import axios from "../api/axios";
 import { useAppDispatch } from "../../store/stateHook";
 import { login } from "../../store/authSlice";
 
@@ -22,7 +22,7 @@ const LoginComponent: React.FC<LoginProps> = ({ toggleForm }) => {
     try {
       const response = await axios({
         method: "post",
-        url: "http://localhost:3000/auth/login",
+        url: "/auth/login",
         data: {
           email,
           password,

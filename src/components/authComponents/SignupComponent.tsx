@@ -2,17 +2,15 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import InputComponent from "../utilities/InputComponent";
 import GoogleLoginComponent from "./GoogleLoginComponent";
-import axios from "axios";
+import axios from "../api/axios";
 import { useDispatch } from "react-redux";
 import { login } from "../../store/authSlice";
-import { useAppSelector } from "../../store/stateHook";
 
 interface SignupProps {
   toggleForm: () => void;
 }
 
 const SignupComponent: React.FC<SignupProps> = ({ toggleForm }) => {
-  const token = useAppSelector((state) => state.auth.token);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [username, setUsername] = useState("");
@@ -24,7 +22,7 @@ const SignupComponent: React.FC<SignupProps> = ({ toggleForm }) => {
     try {
       const response = await axios({
         method: "post",
-        url: "http://localhost:3000/auth/signup",
+        url: "/auth/signup",
         data: {
           email,
           password,
