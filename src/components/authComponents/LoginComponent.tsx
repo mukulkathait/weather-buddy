@@ -1,4 +1,4 @@
-import React, { ErrorInfo, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import InputComponent from "../utilities/InputComponent";
 import GoogleLoginComponent from "./GoogleLoginComponent";
