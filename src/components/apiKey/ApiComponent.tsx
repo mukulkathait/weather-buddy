@@ -1,4 +1,5 @@
-import axios from "axios";
+// import axios from "axios";
+import axios from "../api/axios";
 import { useEffect, useState } from "react";
 import DisplayApiKeys from "./DisplayApiKeys";
 import { useAppSelector } from "../../store/stateHook";
@@ -25,14 +26,13 @@ function ApiComponent() {
   useEffect(() => {
     const getApiKeys = async () => {
       try {
-        const response = await axios.get<ApiKeyDataTypes>(
-          "http://localhost:3000/api",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await axios<ApiKeyDataTypes>({
+          method: "get",
+          url: "/api",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         const { jwt_secret, telegram_bot_token, weather_api_key } =
           response.data;
         setApiKeysData({ jwt_secret, telegram_bot_token, weather_api_key });
